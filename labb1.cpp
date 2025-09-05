@@ -25,7 +25,7 @@ struct Array {
         Node* temp;
         for (int bit = 31; bit >= 0; --bit)
         {
-            Node* temp = cur;
+            temp = cur;
             uint32_t b = (lastChangedIndex >> bit) & 1;
             cur = (b == 0) ? cur->left : cur->right;
             delete temp;
@@ -73,11 +73,11 @@ struct Array {
 
     }
 
-    
-    static Array set (const Array& arr, int32_t val, uint32_t index)
+
+    static Array set(const Array& arr, int32_t val, uint32_t index)
     {
         Node* newRoot = set_helper(arr.root, val,index, 31);
-        return Array(newRoot); // returns the newest array
+        return Array(newRoot);
     }
 };
 
@@ -139,6 +139,7 @@ struct PersistentArray {
         pop();
     }
 };
+
 
 int main() {
     std::ios::sync_with_stdio(false);
