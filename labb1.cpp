@@ -1,7 +1,5 @@
 #include<cstdint>
-#include <vector>
 #include <iostream>
-
 
 
 struct Node{
@@ -10,6 +8,7 @@ struct Node{
     int32_t value;
     bool has_value;
     Node() : left(nullptr), right(nullptr), value(0) ,has_value(false){}
+    Node(Node* l, Node* r) : left(l), right(r), value(0) ,has_value(false){}
     Node(Node* l, Node* r, int32_t v, bool hv): left(l), right(r),value(v), has_value(hv) {}
 };
 
@@ -19,9 +18,11 @@ struct Array {
     Array() : root(nullptr) {}
     Array(Node* r) : root(r) {}
 
+
     void destroy(uint32_t lastChangedIndex)
     {
         Node* cur = root;
+        Node* temp;
         for (int bit = 31; bit >= 0; --bit)
         {
             Node* temp = cur;
@@ -29,12 +30,14 @@ struct Array {
             cur = (b == 0) ? cur->left : cur->right;
             delete temp;
         }
+        delete cur;
+        int b;
     }
 
-    // newArray() return new array
+
     static Array newArray() {return Array(nullptr);}
 
-    // get(index) return value
+
     static int32_t get(Array& arr, uint32_t index)
     {
         Node* cur = arr.root;
@@ -61,29 +64,30 @@ struct Array {
         if (b == 0)
         {
             Node* newLeft = set_helper(left,val,index,bit - 1);
-            return new Node(newLeft,right,val,false);
+            return new Node(newLeft,right);
         }
         else
         {
             Node* newRight = set_helper(right,val,index, bit - 1);
-            return new Node(left,newRight,val,false);
+            return new Node(left,newRight);
         }
 
     }
 
-    static Array set (Array& arr, int32_t val, uint32_t index)
+    static Array set (const Array& arr, int32_t val, uint32_t index)
     {
         Node* newRoot = set_helper(arr.root, val,index, 31);
         return Array(newRoot); // returns the newest array
     }
 };
 
+
 struct LinkedListNode {
     Array arr;
     uint32_t lastChangedIndex;
     LinkedListNode* next;
     
-    LinkedListNode(Array& a, uint32_t i, LinkedListNode* n) : arr(a), lastChangedIndex(i), next(n) {}
+    LinkedListNode(const Array& a, uint32_t i, LinkedListNode* n) : arr(a), lastChangedIndex(i), next(n) {}
 
     ~LinkedListNode()
     {
@@ -91,22 +95,26 @@ struct LinkedListNode {
     }
 };
 
+
 struct PersistentArray {
     LinkedListNode* root = nullptr;
 
+
     PersistentArray()
     {
-        this->push(Array::newArray(),-1);
+        push(Array::newArray(),0);
     }
 
-    void push(Array array, uint32_t i)
+
+    void push(const Array& array, uint32_t i)
     {
         root = new LinkedListNode(array, i, root);
     }
 
+
     void pop()
     {
-        if(root)
+        if(root->next)
         {
             LinkedListNode* discard = root;
             root = root->next;
@@ -115,10 +123,10 @@ struct PersistentArray {
     }
 
 
-    void set(uint32_t i , int32_t v)
+    void set(uint32_t i, int32_t v)
     {
         Array next = Array::set(root->arr,v,i);
-        this->push(next, i);
+        push(next, i);
     }
 
     int32_t get(uint32_t i)
@@ -128,19 +136,19 @@ struct PersistentArray {
 
     void unset()
     {
-        this->pop();
+        pop();
     }
-
 };
 
 int main() {
     std::ios::sync_with_stdio(false);
     std::cin.tie(nullptr);
 
+    PersistentArray arr;
+
     int Q;
     if (!(std::cin >> Q)) return 0;
 
-    PersistentArray arr;
     for (int q = 0; q < Q; ++q)
     {
         std::string op;
@@ -148,7 +156,7 @@ int main() {
         if (op == "set")
         {
             uint32_t i;
-            uint32_t v;
+            int32_t v;
 
             std::cin >> i >> v;
             arr.set(i,v);
