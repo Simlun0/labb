@@ -46,7 +46,8 @@ struct Array {
             uint32_t b = (index >> bit) & 1;
             cur = (b == 0) ? cur->left : cur->right;
         }
-        return cur->has_value ? cur->value : 0;
+        if (cur) return cur->has_value ? cur->value : 0;
+        else return 0;
     }
 
 
@@ -147,10 +148,8 @@ int main() {
 
     PersistentArray arr;
 
-    int Q;
-    if (!(std::cin >> Q)) return 0;
 
-    for (int q = 0; q < Q; ++q)
+    while(true)
     {
         std::string op;
         std::cin >> op;
@@ -174,7 +173,7 @@ int main() {
         }
         else // ignore unknown op
         {
-            std::string rest ;
+            std::string rest;
             std::getline(std::cin, rest);
         }
     }
