@@ -1,4 +1,4 @@
-#include<cstdint>
+#include <cstdint>
 #include <iostream>
 
 
@@ -148,11 +148,10 @@ int main() {
 
     PersistentArray arr;
 
-
-    while(true)
+    
+    std::string op;
+    while(std::cin >> op)
     {
-        std::string op;
-        std::cin >> op;
         if (op == "set")
         {
             uint32_t i;
@@ -165,7 +164,7 @@ int main() {
         {
             uint32_t i;
             std::cin >> i;
-            std::cout << arr.get(i) << "\n";
+            std::cout << arr.get(i) << std::endl;
         }
         else if(op == "unset")
         {
