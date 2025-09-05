@@ -2,7 +2,7 @@
 #include <iostream>
 
 
-struct Node{
+struct Node {
     Node* left;
     Node* right;
     int32_t value;
@@ -31,7 +31,6 @@ struct Array {
             delete temp;
         }
         delete cur;
-        int b;
     }
 
 
@@ -50,7 +49,7 @@ struct Array {
         return cur->has_value ? cur->value : 0;
     }
 
-    // set (arr, val, index)
+
     static Node* set_helper(Node* node, int32_t val,uint32_t index, int bit)
     {
         if (bit < 0)
@@ -74,6 +73,7 @@ struct Array {
 
     }
 
+    
     static Array set (const Array& arr, int32_t val, uint32_t index)
     {
         Node* newRoot = set_helper(arr.root, val,index, 31);
